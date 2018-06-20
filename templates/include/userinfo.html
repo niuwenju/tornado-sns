@@ -1,0 +1,11 @@
+{#<div class="face">#}
+{#    <img src="{{ friend.face|face }}" class="face75" />#}
+{#</div>#}
+<ul class="right">
+    <li>昵称:{{ friend['username'] }}</li>
+    <li>
+{#        <a href="{{ friend.url }}">个人主页</a>#}
+		{% if user %}
+	        <span><a href="{{reverse_url('friend_remove', friend['username'])}}">删除好友</a></span>
+		{% end %}
+    </li>

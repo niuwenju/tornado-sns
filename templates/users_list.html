@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}盟友圈{% end%}
+{% block head_link %}
+{% end %}
+{% block  main %}
+    <form action="/search_friends" method="post">
+        <div class="form-gro marb20">
+            <input class="aa" name="search" type="text" placeholder="查找朋友"/>
+            <input class="bn bn-blue" id="jsLoginBtn" type="submit" value="查找"/>
+        </div>
+    </form>
+    <div class="list">
+        <ol>
+        {% for friend in friends %}
+        <li>
+            <div class="userinfo">
+               {% include 'include/userinfo.html'%}
+            </div>          
+        </li>
+        {% end %}
+        </ol>
+{#        <div class="pageturn">#}
+{#            <ul class="pagelist">#}
+{#            {% if friends.has_previous %}#}
+{#                <li class="long"><a href="?{{ friends.previous_page_number.querystring }}">上一页</a></li>#}
+{#            {% else %}#}
+{#                <span class="disabled prev">&lsaquo;&lsaquo; {% trans "previous" %}</span>#}
+{#            {% endif %}#}
+{#            {% for page in friends.pages %}#}
+{#                {% if page %}#}
+{#                    {% ifequal page friends.number %}#}
+{#                        <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>#}
+{#                    {% else %}#}
+{#                        <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>#}
+{#                    {% endifequal %}#}
+{#                {% else %}#}
+{#                    <li class="none"><a href="">...</a></li>#}
+{#                {% endif %}#}
+{#            {% endfor %}#}
+{#            {% if friends.has_next %}#}
+{#                <li class="long"><a href="?{{ friends.next_page_number.querystring }}">下一页</a></li>#}
+{#            {% endif %}#}
+{#            </ul>#}
+{#        </div>#}
+    </div>
+{% end %}

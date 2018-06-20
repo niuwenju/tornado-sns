@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}盟友圈{% end %}
+{% block head_link %}
+{% end %}
+{% block  main %}    
+    <div class="list">
+        <ol>
+        {% for friend in friends %}
+        <li>
+            <div class="userinfo">
+               {% include 'include/userinfo_search.html' %}
+            </div>
+        </li>
+        {% end %}
+        </ol>
+{#        <div class="pageturn">#}
+{#            <ul class="pagelist">#}
+{#            {% if users.has_previous %}#}
+{#                <li class="long"><a href="?{{ users.previous_page_number.querystring }}">上一页</a></li>#}
+{#            {% else %}#}
+{#                <span class="disabled prev">&lsaquo;&lsaquo; {% trans "previous" %}</span>#}
+{#            {% endif %}#}
+{#            {% for page in users.pages %}#}
+{#                {% if page %}#}
+{#                    {% ifequal page users.number %}#}
+{#                        <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>#}
+{#                    {% else %}#}
+{#                        <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>#}
+{#                    {% endifequal %}#}
+{#                {% else %}#}
+{#                    <li class="none"><a href="">...</a></li>#}
+{#                {% endif %}#}
+{#            {% endfor %}#}
+{#            {% if users.has_next %}#}
+{#                <li class="long"><a href="?{{ users.next_page_number.querystring }}">下一页</a></li>#}
+{#            {% endif %}#}
+{#            </ul>#}
+{#        </div>#}
+    </div>
+{% end %}

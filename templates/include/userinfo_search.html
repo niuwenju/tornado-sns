@@ -1,0 +1,23 @@
+{#<div class="face">#}
+{#    <img src="{{ user.face|face }}" class="face75" />#}
+{#</div>#}
+<ul class="right">
+    <li>昵称:{{ friend['username'] }}</li>
+    <li>
+{#        <a href="{{ user.url }}">个人主页</a>#}
+		{% if user %}
+            <span><a href="{{reverse_url('friend_add', friend['username'])}}">添加好友</a></span>
+		{% end %}
+    </li>
+{#    <li>{{ friend.about }}</li>#}
+</ul>
+{#<p class="message">#}
+{#    <span class="face"><img src="{{ item.user.face|face16 }}" class="face16" /></span>#}
+{#    <a>昵称:{{ friends['username'] }}</a>#}
+{#    {{ item.message|urlize|slice:":10" }}... <a class="more" href="{% url 'shejiao-yonghu-views-detail' item.id %}">详情...</a>#}
+{#<p>#}
+{#<p class="info">#}
+{#    {% if user %}#}
+{#    <span><a href="{{ reverse_url('friend_add', friends['username'])}}" title="添加好友">添加好友</a></span>#}
+{#    {% end %}#}
+{#</p>#}

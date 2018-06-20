@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}个人信息{% end %}
+{% block main %}
+    <div class="form">
+        <form action="/settings" method="post" enctype="multipart/form-data">
+            <table cellpadding="0" cellspacing="0">
+                <div class="fl form-box">
+                    <h2>修改个人信息</h2>
+                    {#                    <input type='hidden' name='csrfmiddlewaretoken' value='mymQDzHWl2REXIfPMg2mJaLqDfaS1sD5' />#}
+{#                    <img src="{{ user.face|face }}" class="face100" alt="头像"/>#}
+{#                    <div class="form-group marb20">#}
+{#                        <label>头&nbsp;&nbsp;&nbsp;像</label>#}
+{#                                            <img src="{{ user.face|face }}" class="face100" alt="头像" />#}
+{#                        <input type="file" name="face" class="text" size="6"/>#}
+{#                    </div>#}
+                    <div class="form-group marb20">
+                        <label>昵&nbsp;&nbsp;&nbsp;称</label>
+                        <input type="text" name="username" value="{{ current['username'] }}" size="12" placeholder="请输入昵称"/>
+                    </div>
+                    <div class="form-group marb20">
+                        <label>姓&nbsp;&nbsp;&nbsp;别</label>
+                        <select name="sex" ,id="sex1">
+                            {% if 'm' == current['sex'] %}
+                            <option value="m">男</option>
+                            <option value="f">女</option>
+                            {% else %}
+                            <option value="f">女</option>
+                            <option value="m">男</option>
+                            {% end %}
+                        </select>
+                    </div>
+{#                    <div class="form-group marb20">#}
+{#                        <label>个人主页</label>#}
+{#                        <p1>{{ user.url }}</p1>#}
+{#                    </div>#}
+                    <div class="form-group marb20">
+                        <label>邮&nbsp;&nbsp;&nbsp;箱</label>
+                        <p>{{ current['email'] }}</p>
+                    </div>
+{#                    <div class="form-group marb20">#}
+{#                        <label>电&nbsp;&nbsp;&nbsp;话</label>#}
+{#                        <input name="phone" type="text" value="{{ user.phone}}" size="20" placeholder="请输入电话号码"/>#}
+{#                    </div>#}
+{#                    <div class="form-gr">#}
+{#                        <p>个性签名</p>#}
+{#                    </div>#}
+{#                    <div>#}
+{#                        <textarea name="about" class="text" cols="31" rows="4"#}
+{#                                  placeholder="自我介绍。。。">{{ user.about }}</textarea>#}
+{#                    </div>#}
+                    <div class="error" id="jsLoginTips">{{ error }}</div>
+                    <input class="btn btn-blue" id="jsLoginBtn" type="submit" value="保存 "/>
+                </div>
+            </table>
+        </form>
+    </div>
+{% end %}

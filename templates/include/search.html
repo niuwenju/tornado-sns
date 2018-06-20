@@ -1,0 +1,11 @@
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+{% get_available_languages as LANGUAGES %}
+{% get_current_language_bidi as LANGUAGE_BIDI %}
+<form action="/search_friends/" method="post">
+    {#                    <input type='hidden' name='csrfmiddlewaretoken' value='mymQDzHWl2REXIfPMg2mJaLqDfaS1sD5' />#}
+    <div class="form-gro marb20">
+        <input class="aa" name="username" type="text" placeholder="查找朋友"/>
+        <input class="bn bn-blue" id="jsLoginBtn" type="submit" value=""/>
+    </div>
+</form>

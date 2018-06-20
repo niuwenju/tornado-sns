@@ -1,0 +1,71 @@
+{% extends "base1.html" %}
+{% block title %}用户注册{% end %}
+{% block main %}
+{#    <div class="form">#}
+    <div class="fl form-box">
+        <h2>用户注册</h2>
+        <form action="/signup" method="post">
+            <div class="form-group marb20">
+                <label>邮&nbsp;&nbsp;&nbsp;箱</label>
+                <input type="text" name="email" size="12" placeholder="请输入邮箱"/>
+            </div>
+            <div class="form-group marb20">
+                <label>密&nbsp;&nbsp;&nbsp;码</label>
+                <input name="password" type="password" size="12" placeholder="请输入6-12位密码"/>
+            </div>
+            <div class="form-group marb20">
+                <label>确认密码</label>
+                <input name="confirm" type="password" size="12" placeholder="请确认您的密码"/>
+
+            </div>
+{#            <div class="form-group marb8 captcha1">#}
+{#                <label>验&nbsp;证&nbsp;码</label>#}
+{#                <input type="text" name="check_code" id="check_code" placeholder="请输入验证码" size="6"/>#}
+{#                <img id="check_code_img" src="/create_code_img/" onclick="refresh_check_code(this)"/>#}
+                {#                    <img src="/captcha/image/00bf8887548d891c1cd23b1abd871c1b8076f0ff/" alt="captcha" class="captcha"/>#}
+{#            </div>#}
+{#            <script>#}
+{#                function refresh_check_code(ths) {#}
+{#                    ths.src += '?';#}
+                    {#    src后面加问好会自动刷新验证码img的src#}
+{#                }#}
+{#            </script>#}
+            <div class="error" id="jsLoginTips">{{ error }}</div>
+            <input class="btn btn-blue" id="jsLoginBtn" type="submit" value="注册"/>
+{#            {% module xsrf_form_html() %}#}
+        </form>
+        <div class="form-p">已有牛牛帐号？<a href="{{reverse_url('login')}}">[立即登录]</a></div>
+    </div>
+{#    </div>#}
+{#<div class="form">#}
+{#    <div class="message">{{ state.message }}</div>#}
+{#    <form action="/signup/" method="post">#}
+{#        <table cellpadding="0" cellspacing="0">#}
+{#            <tr>#}
+{#                <td class="field">用户名:</td>#}
+{#                <td><input type="text" name="username" value="{{ state.form.username }}" class="text" size="12" /></td>#}
+{#            </tr>#}
+{#            <tr>#}
+{#                <td class="field">姓名:</td>#}
+{#                <td><input type="text" name="realname" class="text" value="{{ state.form.realname }}" size="5" /></td>#}
+{#            </tr>#}
+{#            <tr>#}
+{#                <td class="field">邮箱:</td>#}
+{#                <td><input type="text" name="email" class="text"  value="{{ state.form.email }}" size="15" /></td>#}
+{#            </tr>#}
+{#            <tr>#}
+{#                <td class="field">密码:</td>#}
+{#                <td><input type="password" name="password" class="text" size="15" /></td>#}
+{#            </tr>#}
+{#            <tr>#}
+{#                <td class="field">{% trans 'Confirm' %}:</td>#}
+{#                <td><input type="password" name="confirm" class="text" size="15" /></td>#}
+{#            </tr>#}
+{#            <tr>#}
+{#                <td class="field"></td>#}
+{#                <td><button type="submit" class="submit">{% trans 'Submit' %}</button></td>#}
+{#            </tr>#}
+{#        </table>#}
+{#    </form>#}
+{#</div>#}
+{% end %}

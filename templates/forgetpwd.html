@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+{% get_available_languages as LANGUAGES %}
+{% get_current_language_bidi as LANGUAGE_BIDI %}
+{% load user_tags %}
+{% block title %}{{ page_title }}{% endblock %}
+{% block main %}
+<div class="form">
+    <form action="/forgetpwd/" method="post">
+        <table cellpadding="0" cellspacing="0">
+            <div class="fl form-box">
+            <h2>修改密码</h2>
+                {#                    <input type='hidden' name='csrfmiddlewaretoken' value='mymQDzHWl2REXIfPMg2mJaLqDfaS1sD5' />#}
+                <div class="form-group marb20">
+                    <label>邮&nbsp;&nbsp;&nbsp;箱</label>
+                    <input type="text" name="email"  size="20" placeholder="请输入邮箱" />
+                </div>
+                <div class="form-group marb20">
+                    <label>新&nbsp;密&nbsp;码</label>
+                    <input type="password" name="newpassword"  size="12" placeholder="请输入新密码" />
+                </div>
+                <div class="form-group marb20">
+                    <label>确认密码</label>
+                    <input type="password" name="confirm"  size="12" placeholder="请确认密码" />
+                </div>
+                <div class="error" id="jsLoginTips">{{ state.message }}</div>
+                <input class="btn btn-blue" id="jsLoginBtn" type="submit" value="提交"/>
+        </table>
+    </form>
+</div>
+
+{% endblock %}

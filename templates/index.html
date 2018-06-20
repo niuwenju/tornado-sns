@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}主页{% end %}
+{% block head_link %}
+{#{% if user %}#}
+{#<link rel="alternate" type="application/rss+xml" title="{{ user.username }} {% trans ' recent message' %}" href="/user/feed/rss/recent/{{ user.username }}" />#}
+{#{% else %}#}
+{#<link rel="alternate" type="application/rss+xml" title="{% trans 'Recent message of eveyone' %}" href="/feed/rss/recent/" />#}
+{#{% end %}#}
+{% end %}
+
+{% block  main %}
+    {% include 'include/postform.html' %}
+<div class="list">
+    <ol>
+        {% for message in messages %}
+        <li>
+            {% include 'include/list_item.html' %}
+        </li>
+        {% end %}
+    </ol>
+</div>
+{#    {% if user %}#}
+{#        {% if self_home %}#}
+{#            {% include 'include/postform.html' %}#}
+{#        {% end %}#}
+{#    {% end %}#}
+{##}
+{#    <div class="list">#}
+{#        <ol>#}
+{#        {% for item in notes.object_list %}#}
+{#        <li>#}
+{#            {% include 'include/list_item.html' %}#}
+{#        </li>#}
+{#        {% end %}#}
+{#        </ol>#}
+{#        <div class="pageturn">#}
+{#            <ul class="pagelist">#}
+{#            {% if notes.has_previous %}#}
+{#                <li class="long"><a href="?{{ notes.previous_page_number.querystring }}">上一页</a></li>#}
+{#            {% end %}#}
+{#            {% for page in notes.pages %}#}
+{#                {% if page %}#}
+{#                    {% if page == notes.number %}#}
+{#                        <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>#}
+{#                    {% else %}#}
+{#                        <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>#}
+{#                    {% end %}#}
+{#                {% else %}#}
+{#                    <li class="none"><a href="">...</a></li>#}
+{#                {% end %}#}
+{#            {% end %}#}
+{#            {% if notes.has_next %}#}
+{#                <li class="long"><a href="?{{ notes.next_page_number.querystring }}">下一页</a></li>#}
+{#            {% end %}#}
+{#            </ul>#}
+{#        </div>#}
+{#    </div>#}
+{% end %}

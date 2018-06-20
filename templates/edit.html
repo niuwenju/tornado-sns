@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}帐户信息{% end %}
+{% block main %}
+<div class="form">
+    <form action="/edit/" method="get">
+        <table cellpadding="0" cellspacing="0">
+            <ul id="nave">
+                <div class="list">
+                    <li><a href="/settings">个人信息</a></li>
+                </div>
+                <div class="list">
+                    <li><a href="/changepassword">修改密码</a></li>
+                </div>
+            </ul>
+        </table>
+    </form>
+</div>
+
+{% end %}
