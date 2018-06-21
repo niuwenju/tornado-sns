@@ -5,6 +5,7 @@
       <sourceFolder url="file://$MODULE_DIR$/statics" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/templates" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/temp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/templates/chat" isTestSource="false" />
     </content>
     <orderEntry type="jdk" jdkName="Python 2.7.14 virtualenv at ~/Desktop/miniSNS/minienv" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

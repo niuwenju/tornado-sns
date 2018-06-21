@@ -1,11 +1,13 @@
-{#<div class="face">#}
-{#    <img src="{{ friend.face|face }}" class="face75" />#}
-{#</div>#}
-<ul class="right">
+<div class="face">
+    <img src="{{ static_url('images/face75.png') }}" class="face75" />
+</div>
+<ol class="right">
     <li>昵称:{{ friend['username'] }}</li>
     <li>
 {#        <a href="{{ friend.url }}">个人主页</a>#}
 		{% if user %}
-	        <span><a href="{{reverse_url('friend_remove', friend['username'])}}">删除好友</a></span>
+	        <span><a href="{{reverse_url('friend_remove', friend['email'])}}">删除好友</a></span>
+            <span><a href="{{reverse_url('chatsocket')}}">发消息</a></span>
 		{% end %}
     </li>
+</ol>

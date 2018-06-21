@@ -221,7 +221,7 @@ body {
     padding-bottom: 5px;
     /*border-bottom: 1px solid #DDD;*/
     margin-bottom: 5px;
-    height: 35px;
+    height: 75px;
 }
 
 #main .list ol li .userinfo .face {
@@ -229,8 +229,9 @@ body {
 }
 
 #main .list ol li .userinfo .right {
-    margin-left: 78px;
+    margin-left: 80px;
     width: 120px;
+    margin-top: -78px;
     list-style: none;
 }
 

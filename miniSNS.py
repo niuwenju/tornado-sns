@@ -25,18 +25,21 @@ define("port", default=8005, help="run on the given port", type=int)
 class Application(tornado.web.Application):
     def __init__(self):
         handlers = [
-            (r"/", MainHandler),
+            (r"/index", MainHandler,{},'index'),
             (r"/login", LoginHandler,{},'login'),
             (r"/signup", SignupHandler,{},'signup'),
             (r"/logout", LogoutHandler,{},'logout'),
-            (r"/edit", EditHandler),
-            (r"/settings", SettingsHandler),
+            (r"/edit", EditHandler,{},'edit'),
+            (r"/settings", SettingsHandler,{},'settings'),
             (r"/changepassword", ChangeHandler),
-            (r"/friends", FriendsHandler),
-            (r"/friend_add/(?P<username>[a-zA-Z\-_\-.\-@\d]+)", AddfriendsHandler,{},'friend_add'),
-            (r"/friend_remove/(?P<username>[a-zA-Z\-_\-.\-@\d]+)", RemovefriendsHandler,{},'friend_remove'),
+            (r"/friends", FriendsHandler,{},'friends'),
+            (r"/friend_add/(?P<email>[a-zA-Z\-_\-.\-@\-%\d]+)", AddfriendsHandler,{},'friend_add'),
+            (r"/friend_remove/(?P<email>[a-zA-Z\-_\-.\-@\-%\d]+)", RemovefriendsHandler,{},'friend_remove'),
             (r"/search_friends", SearchfriendsHandler),
             (r"/add_message", AddmessageHandler),
+            # (r"/chatsocket/(?P<email>[a-zA-Z\-_\-.\-@\-%\d]+)", ChatHandler,{},'chatsocket'),
+            (r"/", ChatHandler,{},'chatsocket'),
+            (r"/chatsocket", ChatSocketHandler),
             # (r"/create_code_img", CreatecodeimgHandler),
             # (r"/chatsocket", ChatSocketHandler),
         ]
@@ -54,6 +57,19 @@ class Application(tornado.web.Application):
 
 
 class BaseHandler(tornado.web.RequestHandler):
+    def get_current_user(self):
+        return self.get_secure_cookie("user")
+
+    @property
+    def db(self):
+        # if not hasattr(self, '_db'):
+        #     self._db = asyncmongo.Client(pool_id='mydb', host='127.0.0.1', port=27017, maxcached=10, maxconnections=50,
+        #                                  dbname='test')
+        # return self._db
+        return self.application.settings['db']
+
+
+class ChatbaseHandler(tornado.websocket.WebSocketHandler):
     def get_current_user(self):
         return self.get_secure_cookie("user")
 
@@ -118,7 +134,7 @@ class LoginHandler(BaseHandler):
             else:
                 if password == user['password']:
                     self.set_secure_cookie("user", self.get_argument("email"))
-                    self.redirect('/')
+                    self.redirect('/index')
                 else:
                     self.render("signin.html", error = u'密码错误')
 
@@ -167,7 +183,7 @@ class SignupHandler(BaseHandler):
                     if email:
                         yield self.db.user.insert(data)
                     self.set_secure_cookie('user', email)
-                    self.redirect('/')
+                    self.redirect('/index')
 
 class LogoutHandler(BaseHandler):
     def get(self):
@@ -251,16 +267,17 @@ class FriendsHandler(BaseHandler):
         friends = []
         for friend in _user['friends']:
             cur = yield self.db.user.find_one({'_id': friend})
-            friends.append({'username':cur['username']})
+            friends.append({'username':cur['username'], 'email':cur['email']})
         self.render('users_list.html', user=user, friends = friends)
 
 
 class RemovefriendsHandler(BaseHandler):
     @tornado.web.asynchronous
     @gen.coroutine
-    def get(self,username):
+    def get(self,email):
         user = self.current_user
-        friend = yield self.db.user.find_one({'username': username})
+        # email.replace("%40", "@")
+        friend = yield self.db.user.find_one({'email': email})
         yield self.db.user.update_one({'email': self.current_user}, {"$pull": {"friends": friend['_id']}})
         self.redirect("/friends")
         # friends = yield self.db.user.find_one({'email': self.current_user})
@@ -269,9 +286,10 @@ class RemovefriendsHandler(BaseHandler):
 class AddfriendsHandler(BaseHandler):
     @tornado.web.asynchronous
     @gen.coroutine
-    def get(self, username):
+    def get(self, email):
         user = self.current_user
-        friend = yield self.db.user.find_one({'username':username})
+        # email.replace("%40", "@")
+        friend = yield self.db.user.find_one({'email':email})
         yield self.db.user.update_one({'email': user}, {"$addToSet": {"friends": friend['_id']}})
         self.redirect("/friends")
         # friends = yield self.db.user.find({'email': self.current_user})
@@ -288,7 +306,7 @@ class SearchfriendsHandler(BaseHandler):
             pass
         if username:
             friends = []
-            cursor = self.db.user.find({'username': username},{'username':1})
+            cursor = self.db.user.find({'username': username},{'username':1, 'email':1})
             for friend in (yield cursor.to_list(length=100)):
                 friends.append(friend)
             # friends = yield self.db.user.find_one({'username': username},{'username':1})
@@ -315,11 +333,106 @@ class AddmessageHandler(BaseHandler):
 
             }
             yield self.db.message.insert(data)
-            self.redirect("/")
+            self.redirect("/index")
         else:
-            self.redirect("/")
+            self.redirect("/index")
 
 
+"""团战聊天"""
+
+class ChatHandler(BaseHandler):
+    @tornado.web.asynchronous
+    @gen.coroutine
+    def get(self):
+        user = self.current_user
+        _user = yield self.db.user.find_one({'email':user})
+        username = _user['username']
+        self.render("chatindex.html", messages=ChatSocketHandler.cache, clients=ChatSocketHandler.waiters,
+                    username=username,user=user)
+
+#
+#
+# class MainHandler(tornado.web.RequestHandler):
+#     def get(self):
+#         self.render("index.html", messages=ChatSocketHandler.cache, clients=ChatSocketHandler.waiters, username= "游客%d" % ChatSocketHandler.client_id)
+
+
+class ChatSocketHandler(ChatbaseHandler):
+    waiters = set()
+    cache = []
+    cache_size = 200
+    client_id = 0
+
+    def get_compression_options(self):
+        # Non-None enables compression with default options.
+        return {}
+
+    @tornado.web.asynchronous
+    @gen.coroutine
+    def open(self):
+        user = self.current_user
+        _user = yield self.db.user.find_one({'email': user})
+        self.client_id = ChatSocketHandler.client_id
+        ChatSocketHandler.client_id = ChatSocketHandler.client_id + 1
+        self.username = _user['username']
+        ChatSocketHandler.waiters.add(self)
+
+        chat = {
+            "id": str(uuid.uuid4()),
+            "type": "online",
+            "client_id": self.client_id,
+            "username": self.username,
+            "datetime": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+            }
+        ChatSocketHandler.send_updates(chat)
+
+    def on_close(self):
+        ChatSocketHandler.waiters.remove(self)
+        chat = {
+            "id": str(uuid.uuid4()),
+            "type": "offline",
+            "client_id": self.client_id,
+            "username": self.username,
+            "datetime": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+            }
+        ChatSocketHandler.send_updates(chat)
+
+
+    @classmethod
+    def update_cache(cls, chat):
+        cls.cache.append(chat)
+        if len(cls.cache) > cls.cache_size:
+            cls.cache = cls.cache[-cls.cache_size:]
+
+    @classmethod
+    def send_updates(cls, chat):
+        logging.info("sending message to %d waiters", len(cls.waiters))
+        for waiter in cls.waiters:
+            try:
+                waiter.write_message(chat)
+            except:
+                logging.error("Error sending message", exc_info=True)
+
+    def on_message(self, message):
+        logging.info("got message %r", message)
+        parsed = tornado.escape.json_decode(message)
+        self.username = parsed["username"]
+        chat = {
+            "id": str(uuid.uuid4()),
+            "body": parsed["body"],
+            "type": "message",
+            "client_id": self.client_id,
+            "username": self.username,
+            "datetime": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+            }
+        chat["html"] = tornado.escape.to_basestring(
+            self.render_string("message.html", message=chat))
+
+        ChatSocketHandler.update_cache(chat)
+        ChatSocketHandler.send_updates(chat)
+
+
+"""1对1聊天待开发"""
 # class ChatSocketHandler(tornado.websocket.WebSocketHandler):
 #     waiters = set()
 #     cache = []
@@ -341,7 +454,7 @@ class AddmessageHandler(BaseHandler):
 #             "type": "online",
 #             "client_id": self.client_id,
 #             "username": self.username,
-#             "datetime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+#             "datetime": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 #             }
 #         ChatSocketHandler.send_updates(chat)
 #
@@ -389,7 +502,6 @@ class AddmessageHandler(BaseHandler):
 #
 #         ChatSocketHandler.update_cache(chat)
 #         ChatSocketHandler.send_updates(chat)
-
 
 def main():
     tornado.options.parse_command_line()

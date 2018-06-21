@@ -1,12 +1,13 @@
+{#{% autoescape %}#}
 {#<div class="face">#}
-{#    <img src="{{ user.face|face }}" class="face75" />#}
+{#    <img src="{{ static_url('images/face32.png') }}" class="face75" />#}
 {#</div>#}
 <ul class="right">
     <li>昵称:{{ friend['username'] }}</li>
     <li>
 {#        <a href="{{ user.url }}">个人主页</a>#}
 		{% if user %}
-            <span><a href="{{reverse_url('friend_add', friend['username'])}}">添加好友</a></span>
+            <span><a href="{{reverse_url('friend_add', friend['email'])}}">添加好友</a></span>
 		{% end %}
     </li>
 {#    <li>{{ friend.about }}</li>#}
