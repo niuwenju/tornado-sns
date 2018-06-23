@@ -5,6 +5,15 @@
 {% block  main %}    
     <div class="list">
         <ol>
+        {% for friend in isfriends %}
+        <li>
+            <div class="userinfo">
+               {% include 'include/userinfo.html' %}
+            </div>
+        </li>
+        {% end %}
+        </ol>
+        <ol>
         {% for friend in friends %}
         <li>
             <div class="userinfo">

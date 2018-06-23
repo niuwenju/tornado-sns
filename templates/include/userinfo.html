@@ -7,7 +7,7 @@
 {#        <a href="{{ friend.url }}">个人主页</a>#}
 		{% if user %}
 	        <span><a href="{{reverse_url('friend_remove', friend['email'])}}">删除好友</a></span>
-            <span><a href="{{reverse_url('chatsocket')}}">发消息</a></span>
+            <span><a href="{{reverse_url('allchatsocket')}}">发消息</a></span>
 		{% end %}
     </li>
 </ol>

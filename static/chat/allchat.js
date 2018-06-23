@@ -46,13 +46,13 @@ jQuery.fn.formToDict = function() {
     return json;
 };
 
-function add(id,txt) {
-    var ul=$('#user_list');
-    var li= document.createElement("li");
-    li.innerHTML=txt;
-    li.id=id;
-    ul.append(li);
-}
+function add(id,txt) {    
+    var ul=$('#user_list');    
+    var li= document.createElement("li");    
+    li.innerHTML=txt;  
+    li.id=id;  
+    ul.append(li);    
+} 
 
 function del(id){
     $('#'+id).remove();
@@ -62,7 +62,7 @@ var updater = {
     socket: null,
 
     start: function() {
-        var url = "ws://" + location.host + "/chatsocket";
+        var url = "ws://" + location.host + "/allchatsocket";
         updater.socket = new WebSocket(url);
         updater.socket.onmessage = function(event) {
             updater.showMessage(JSON.parse(event.data));
@@ -83,6 +83,3 @@ var updater = {
         }
     }
 };
-/**
- * Created by niuwenju on 18-6-23.
- */

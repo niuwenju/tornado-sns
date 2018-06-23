@@ -65,6 +65,31 @@ width: 200px;
 }
 
 
+#input .mes {
+  width:160px;
+  height: 25px;
+  border: 1px solid #66AFE9;
+  border-radius: 5px;
+  /*box-shadow: 0px 0 13px rgba(100,100,100,.7);*/
+}
+
+
+#input .in {
+  width:39px;
+  height: 25px;
+  text-align:center;
+  position: absolute;
+  font-size: 15px;
+  border-radius: 5px;
+  border: 1px solid #66AFE9;
+}
+
+
+.in:hover {
+    background: #66AFE9;
+}
+
+
 #inbox .username {
   margin-top: 1.0em;
   bottom: 30px;
