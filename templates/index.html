@@ -12,12 +12,15 @@
     {% include 'include/postform.html' %}
 <div class="list">
     <ol>
-        {% for message in messages %}
+        {% for message in news_list %}
         <li>
             {% include 'include/list_item.html' %}
         </li>
         {% end %}
     </ol>
+</div>
+<div class="pagination">
+    {% raw str_page %}
 </div>
 {#    {% if user %}#}
 {#        {% if self_home %}#}
